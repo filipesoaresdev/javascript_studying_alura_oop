@@ -1,15 +1,12 @@
 class ListaNegociacoes {
     
-    constructor(trap) {
+    constructor() {
         this._negociacoes = [];
-        this._trap = trap;
     }
     
-    adiciona(negociacao) {
-        
-        this._negociacoes.push(negociacao);
+    add(negociacao) {
 
-        this._trap(this);
+         this._negociacoes.push(negociacao);
 
     }
     
@@ -18,9 +15,8 @@ class ListaNegociacoes {
         return [].concat(this._negociacoes);
     }
 
-    esvazia(){
+    clear(){
         this._negociacoes = [];
-        this._trap(this);
     }
 
 }
