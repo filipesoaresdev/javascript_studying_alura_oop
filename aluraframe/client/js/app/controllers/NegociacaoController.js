@@ -13,31 +13,15 @@ class NegociacaoController {
         
         // Now, let's implement a proxy pattern to solve this problem
 
-        let self = this;
 
-        this._listaNegociacoes = new Proxy(new ListaNegociacoes(),{
-
-            get(target, prop, receiver){
-
-                if(['add','clear'].includes(prop) && typeof(target[prop]) == typeof(Function) ){
-
-                    return function() {
-                        Reflect.apply(target[prop],target, arguments);
-                        self._negociacoesView.update(target);
-                    }
-                }
-
-                return Reflect.get(target,prop,receiver);
-
-            }
-        });
+        this._listaNegociacoes = ProxyFactory.create(new ListaNegociacoes(), ['add','clear'], model => this._negociacoesView.update(model)  );
 
         
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
         this._negociacoesView.update(this._listaNegociacoes);
 
         
-        this._mensagem = new Mensagem();
+        this._mensagem = ProxyFactory.create(new Mensagem(),['texto'], model => this._mensagemView.update(model) );
         this._mensagemView = new MensagemView($('#mensagemView'));
         this._mensagemView.update(this._mensagem);
 
@@ -49,19 +33,15 @@ class NegociacaoController {
         
         event.preventDefault();
         this._listaNegociacoes.add(this._criaNegociacao());
-        
-        this._mensagem.texto = 'Negociação addda com sucesso';
-        this._mensagemView.update(this._mensagem);
-        
+        this._mensagem.texto = 'Negociação added com sucesso';
         this._limpaFormulario();   
     }
 
     apaga(){
 
         this._listaNegociacoes.clear();
-
         this._mensagem.texto="Negociações Apagadas";
-        this._mensagemView.update(this._mensagem);
+
     }
     
     _criaNegociacao() {
