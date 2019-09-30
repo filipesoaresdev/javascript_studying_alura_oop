@@ -19,4 +19,8 @@ class ListaNegociacoes {
         this._negociacoes = [];
     }
 
+    get totalVolume(){
+        return this._negociacoes.reduce( (total,n)=> total + n.volume, 0.0 );
+    }
+
 }
