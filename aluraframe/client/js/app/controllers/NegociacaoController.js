@@ -30,14 +30,32 @@ class NegociacaoController {
         
         event.preventDefault();
         this._listaNegociacoes.add(this._criaNegociacao());
-        this._mensagem.texto = 'Negociação added com sucesso';
+        this._mensagem.texto = 'Negociation added success';
         this._limpaFormulario();   
+    }
+
+    importNegociacoes(){
+
+        let service = new NegotiationService();
+
+        service.getWeeksNegotiations( (error, negotiations) => {
+            if(error){
+                this._mensagem.texto = error;
+                return;
+            }
+
+            negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+            this._mensagem.texto = 'Successfully imported negotiations';
+
+        } );
+
+
     }
 
     apaga(){
 
         this._listaNegociacoes.clear();
-        this._mensagem.texto="Negociações Apagadas";
+        this._mensagem.texto="Negotiations Erased";
 
     }
     
