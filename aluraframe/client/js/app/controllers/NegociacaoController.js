@@ -39,46 +39,47 @@ class NegociacaoController {
         /**
          * This importation uses 3 differents endpoints only for didatic purpose.
          * They are included in the same list the objects from this week, from the last week and from the week before the last.
-         * They are included together in cascade to avoid asynchronous calls (pyramid of doom)
-         * Next commit will solve this
+         * 
+         * I'm using now the "Promise" to improve the legibility
+         * 
          */
         let service = new NegotiationService();
 
-        service.getWeeksNegotiations( (error, negotiations) => {
-            if(error){
-                this._mensagem.texto = error;
-                return;
-            }
+        Promise.all( [service.getWeeksNegotiations(),
+                    service.getNegotiationsLastWeek(),
+                    service.getNegotiationsTheWeekBeforeLast()] )
+                    .then(
+                        negotiations => {
+                            negotiations.reduce((flatArray, array)=> flatArray.concat(array) , []).forEach(negotiation => this._listaNegociacoes.add(negotiation));
+                            this._mensagem.texto = 'Negotiations successfully imported';
+                            }
+                        )
+                    .catch(error => this._mensagem.texto = error);
 
-            negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
 
-            service.getNegotiationsLastWeek( (error,negotiations) => {
-                if(error){
-                    this._mensagem.texto = error;
-                    return;
-                }
-    
-                negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+        /*
+        service.getWeeksNegotiations().then(
+                    negotiations => {
+                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+                        this._mensagem.texto = 'Negotiations successfully imported';
+                        }
+                    )
+                .catch(error => this._mensagem.texto = error);
+        service.getNegotiationsLastWeek().then(
+                    negotiations => {
+                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+                        this._mensagem.texto = 'Negotiations successfully imported';
+                        }
+                    )
+                .catch(error => this._mensagem.texto = error);
+        service.getNegotiationsTheWeekBeforeLast().then(
+                    negotiations => {
+                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+                        this._mensagem.texto = 'Negotiations successfully imported';
+                        }
+                    )
+                .catch(error => this._mensagem.texto = error); */
 
-                service.getNegotiationsTheWeekBeforeLast( (error,negotiations) => {
-                    if(error){
-                        this._mensagem.texto = error;
-                        return;
-                    }
-        
-                    negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
-        
-                    this._mensagem.texto = 'Negotiations successfully imported';
-        
-                });
-    
-            });
-
-        } );
-
-        
-
-        
 
     }
 
