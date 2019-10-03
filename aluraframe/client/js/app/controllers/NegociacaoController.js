@@ -57,29 +57,6 @@ class NegociacaoController {
                     .catch(error => this._mensagem.texto = error);
 
 
-        /*
-        service.getWeeksNegotiations().then(
-                    negotiations => {
-                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
-                        this._mensagem.texto = 'Negotiations successfully imported';
-                        }
-                    )
-                .catch(error => this._mensagem.texto = error);
-        service.getNegotiationsLastWeek().then(
-                    negotiations => {
-                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
-                        this._mensagem.texto = 'Negotiations successfully imported';
-                        }
-                    )
-                .catch(error => this._mensagem.texto = error);
-        service.getNegotiationsTheWeekBeforeLast().then(
-                    negotiations => {
-                        negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
-                        this._mensagem.texto = 'Negotiations successfully imported';
-                        }
-                    )
-                .catch(error => this._mensagem.texto = error); */
-
 
     }
 
