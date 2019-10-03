@@ -36,6 +36,12 @@ class NegociacaoController {
 
     importNegociacoes(){
 
+        /**
+         * This importation uses 3 differents endpoints only for didatic purpose.
+         * They are included in the same list the objects from this week, from the last week and from the week before the last.
+         * They are included together in cascade to avoid asynchronous calls (pyramid of doom)
+         * Next commit will solve this
+         */
         let service = new NegotiationService();
 
         service.getWeeksNegotiations( (error, negotiations) => {
@@ -45,10 +51,34 @@ class NegociacaoController {
             }
 
             negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
-            this._mensagem.texto = 'Successfully imported negotiations';
+
+            service.getNegotiationsLastWeek( (error,negotiations) => {
+                if(error){
+                    this._mensagem.texto = error;
+                    return;
+                }
+    
+                negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+
+                service.getNegotiationsTheWeekBeforeLast( (error,negotiations) => {
+                    if(error){
+                        this._mensagem.texto = error;
+                        return;
+                    }
+        
+                    negotiations.forEach(negotiation => this._listaNegociacoes.add(negotiation));
+        
+                    this._mensagem.texto = 'Negotiations successfully imported';
+        
+                });
+    
+            });
 
         } );
 
+        
+
+        
 
     }
 
