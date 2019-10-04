@@ -27,7 +27,7 @@
 
         <button class="btn btn-primary" type="submit" onclick="sendPost(event)">Enviar dados para servidor</button>
     </form>
-
+    <script src="js/app/services/HttpService.js"> </script>
     <script>
 //POST implementation
         function sendPost(event) {
@@ -46,30 +46,16 @@
             negociacao.valor = value.value;
             
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST','/negociacoes');
-            xhr.setRequestHeader('Content-type','application/json');
+            new HttpService().post('/negociacoes', negociacao)
+                            .then(() => {
+                                date.value='';
+                                quantity.value='';
+                                value.value=0.0;
+                                date.focus();
+                            })
+                            .catch(error =>  alert('An error has occurred!')) ;
 
-            xhr.onreadystatechange = () => {
-                if(xhr.readyState == 4){
 
-
-                    if(xhr.status == 200){
-
-                        date.value = '';
-                        quantity.value = '';
-                        value.value = '';
-                        date.focus();
-                        alert('Successfully sended');
-
-                    }else{
-                        alert('It was not possible to send the negotiation...');
-                    }
-
-                }
-            }
-
-            xhr.send(JSON.stringify(negociacao));
         }
     </script>
 </body>

@@ -1,7 +1,8 @@
 class NegociacaoController {
     
     constructor() {
-        
+        this._order = '';
+
         let $ = document.querySelector.bind(document);
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
@@ -16,13 +17,23 @@ class NegociacaoController {
 
         this._listaNegociacoes = new Bind(new ListaNegociacoes(),  
                                         new NegociacoesView($('#negociacoesView')), 
-                                        'add','clear');
+                                        'add','clear','order','reverse');
         
         this._mensagem = new Bind(new Mensagem(), 
                                 new MensagemView($('#mensagemView')), 
                                 'texto' );
 
         this._relogio = new Relogio();
+        
+    }
+
+    order(column){
+        if(this._order == column){
+            this._listaNegociacoes.reverse();
+        }else{
+            this._listaNegociacoes.order((a,b) => a[column] - b[column]);
+        }
+        this._order = column;
         
     }
     
